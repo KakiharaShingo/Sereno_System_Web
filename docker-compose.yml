@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  # PHP/Apache/Laravel Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sereno_system_web
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+      - ./storage:/var/www/html/storage
+    environment:
+      - APP_NAME=3DMOTOCRAFT - Sereno System
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:8080
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=sereno_system_web
+      - DB_USERNAME=root
+      - DB_PASSWORD=password
+      - COMPANY_NAME=Sereno System
+      - COMPANY_REPRESENTATIVE=垣原 親伍
+      - COMPANY_FOUNDING_YEAR=2022
+      - COMPANY_ADDRESS=大阪府和泉市仏並町170-1
+      - COMPANY_PHONE=09032885689
+      - COMPANY_EMAIL=sk.shingo.10@gmail.com
+      - YOUTUBE_CHANNEL=https://www.youtube.com/@kaaki_bike
+    depends_on:
+      - db
+    networks:
+      - sereno_network
+
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: sereno_system_db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: sereno_system_web
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_PASSWORD: password
+      MYSQL_USER: sereno_user
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - sereno_network
+
+  # phpMyAdmin for database management
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: sereno_system_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: password
+    depends_on:
+      - db
+    networks:
+      - sereno_network
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: sereno_system_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - sereno_network
+
+  # Node.js for development (optional)
+  node:
+    image: node:18-alpine
+    container_name: sereno_system_node
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "3000:3000"
+      - "5173:5173"
+    networks:
+      - sereno_network
+
+volumes:
+  db_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  sereno_network:
+    driver: bridge

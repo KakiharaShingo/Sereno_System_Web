@@ -1,0 +1,64 @@
+{
+  "name": "sereno-system-web",
+  "version": "1.0.0",
+  "description": "3DMOTOCRAFT - Sereno System Corporate Website",
+  "main": "public/js/app.js",
+  "scripts": {
+    "dev": "npm run development",
+    "development": "mix",
+    "watch": "mix watch",
+    "watch-poll": "mix watch -- --watch-options-poll=1000",
+    "hot": "mix watch --hot",
+    "prod": "npm run production",
+    "production": "mix --production",
+    "build": "npm run production",
+    "serve": "php artisan serve",
+    "test": "php artisan test",
+    "lint": "eslint public/js/*.js",
+    "format": "prettier --write public/js/*.js public/css/*.css"
+  },
+  "keywords": [
+    "3dprinting",
+    "motocraft",
+    "sereno",
+    "laravel",
+    "corporate-website",
+    "responsive",
+    "multilingual"
+  ],
+  "author": "Sereno System",
+  "license": "MIT",
+  "devDependencies": {
+    "laravel-mix": "^6.0.49",
+    "eslint": "^8.57.0",
+    "prettier": "^3.0.0",
+    "sass": "^1.69.0",
+    "sass-loader": "^13.3.0",
+    "postcss": "^8.4.31",
+    "autoprefixer": "^10.4.16",
+    "cross-env": "^7.0.3"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.4.0",
+    "bootstrap": "^5.3.0",
+    "axios": "^1.6.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/sereno-system-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/sereno-system-web/issues"
+  },
+  "homepage": "https://github.com/your-username/sereno-system-web#readme"
+}
