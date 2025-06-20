@@ -1,0 +1,59 @@
+# Docker Compose Override for Development
+# This file provides development-specific configurations
+
+version: '3.8'
+
+services:
+  # Development-specific app configuration
+  app:
+    volumes:
+      # Mount source code for live editing
+      - .:/var/www/html
+      - ./storage:/var/www/html/storage
+      # Exclude vendor and node_modules for performance
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
+    environment:
+      # Development environment variables
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - LOG_LEVEL=debug
+    # Enable Xdebug for development
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Development database with persistent volume
+  db:
+    volumes:
+      - db_data_dev:/var/lib/mysql
+      - ./docker/mysql:/docker-entrypoint-initdb.d
+    environment:
+      # Development database settings
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    # Expose database port for external tools
+    ports:
+      - "3306:3306"
+
+  # MailHog for email testing in development
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: sereno_system_mailhog
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    networks:
+      - sereno_network
+
+  # Development Node.js with hot reload
+  node:
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run watch"
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+
+volumes:
+  db_data_dev:
+    driver: local
