@@ -27,10 +27,18 @@ services:
       - COMPANY_NAME=Sereno System
       - COMPANY_REPRESENTATIVE=垣原 親伍
       - COMPANY_FOUNDING_YEAR=2022
-      - COMPANY_ADDRESS=大阪府和泉市仏並町170-1
+      - COMPANY_ADDRESS=〒594-1121 大阪府和泉市下宮町１７０−１
       - COMPANY_PHONE=09032885689
       - COMPANY_EMAIL=sk.shingo.10@gmail.com
       - YOUTUBE_CHANNEL=https://www.youtube.com/@kaaki_bike
+      - MAIL_MAILER=smtp
+      - MAIL_HOST=mailpit
+      - MAIL_PORT=1025
+      - MAIL_USERNAME=
+      - MAIL_PASSWORD=
+      - MAIL_ENCRYPTION=
+      - MAIL_FROM_ADDRESS=sk.shingo.10@gmail.com
+      - MAIL_FROM_NAME="3DMOTOCRAFT - Sereno System"
     depends_on:
       - db
     networks:
@@ -94,6 +102,17 @@ services:
     ports:
       - "3000:3000"
       - "5173:5173"
+    networks:
+      - sereno_network
+
+  # Mailpit for email testing
+  mailpit:
+    image: axllent/mailpit
+    container_name: sereno_system_mailpit
+    restart: unless-stopped
+    ports:
+      - "8025:8025"  # Web UI
+      - "1025:1025"  # SMTP
     networks:
       - sereno_network
 

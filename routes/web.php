@@ -24,6 +24,15 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Contact form submission
 Route::post('/contact', [HomeController::class, 'contact'])->name('contact.submit');
 
+// Privacy Policy and Terms of Service
+Route::get('/privacy', function () {
+    return view('privacy');
+})->name('privacy');
+
+Route::get('/terms', function () {
+    return view('terms');
+})->name('terms');
+
 // Hidden EC routes (for future use - not visible in navigation)
 Route::prefix('shop')->group(function () {
     Route::get('/', function () {

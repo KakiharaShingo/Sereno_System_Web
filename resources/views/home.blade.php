@@ -113,7 +113,7 @@
             <div class="youtube-container">
                 <div class="youtube-embed">
                     <iframe 
-                        src="https://www.youtube.com/embed?listType=playlist&list=UU{{ str_replace('https://www.youtube.com/@', '', $companyInfo['youtube_channel']) }}"
+                        src="https://www.youtube.com/embed/tL0SQDVZWAE"
                         title="YouTube video player" 
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -155,7 +155,7 @@
                 
                 <div class="location-map">
                     <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3287.123456789!2d135.123456789!3d34.123456789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s大阪府和泉市下之宮町170-1!5e0!3m2!1sja!2sjp!4v1234567890"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3285.123!2d135.4378!3d34.4843!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z5aSn6Ziq5bqc5ZKM5rOJ5biC5LiL5a6u55S677yR77yX77yQ4oiS77yR!5e0!3m2!1sja!2sjp!4v1640995200000"
                         width="100%" 
                         height="300" 
                         style="border:0;" 
@@ -163,6 +163,12 @@
                         loading="lazy" 
                         referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
+                    <div class="map-fallback" style="display: none; padding: 20px; text-align: center; background: #f5f5f5; border-radius: 8px;">
+                        <p><strong>所在地：大阪府和泉市下宮町170-1</strong></p>
+                        <a href="https://www.google.com/maps/search/大阪府和泉市下宮町170-1" target="_blank" style="color: #8FBC8F; text-decoration: none;">
+                            <i class="fas fa-map-marker-alt"></i> Google Mapsで開く
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -231,7 +237,11 @@
                 
                 <div class="company-item">
                     <h3>{{ __('messages.company_business') }}</h3>
-                    <p>3Dプリンティング事業</p>
+                    <div class="business-activities">
+                        @foreach($companyInfo['business_activities'] as $activity)
+                            <p class="business-item">• {{ $activity }}</p>
+                        @endforeach
+                    </div>
                 </div>
                 
                 <div class="company-item">

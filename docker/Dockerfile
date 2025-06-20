@@ -30,6 +30,9 @@ COPY . /var/www/html
 # Copy existing application directory permissions
 COPY --chown=www-data:www-data . /var/www/html
 
+# Fix git ownership issue for Composer
+RUN git config --global --add safe.directory /var/www/html
+
 # Create Laravel-specific directories and set permissions
 RUN mkdir -p /var/www/html/storage/logs \
     && mkdir -p /var/www/html/storage/framework/cache \
@@ -45,10 +48,12 @@ RUN mkdir -p /var/www/html/storage/logs \
 RUN if [ ! -f .env ]; then cp .env.example .env; fi
 
 # Install PHP dependencies
-RUN if [ -f composer.json ]; then composer install --no-dev --optimize-autoloader; fi
+RUN if [ -f composer.json ]; then composer install --no-dev --optimize-autoloader --no-scripts; fi
 
-# Install Node.js dependencies and build assets
-RUN if [ -f package.json ]; then npm install && npm run build; fi
+# Skip Laravel setup for now - will be done on container start
+
+# Skip Node.js build for now - assets are already compiled
+# RUN if [ -f package.json ]; then npm install && npm run build; fi
 
 # Configure Apache for Laravel
 RUN echo '<VirtualHost *:80>\n\
@@ -72,8 +77,11 @@ fi\n\
 \n\
 # Generate application key if not set\n\
 if ! grep -q "APP_KEY=" /var/www/html/.env || grep -q "APP_KEY=$" /var/www/html/.env; then\n\
-    php artisan key:generate --force\n\
+    php artisan key:generate --force --no-interaction || echo "Skipping key generation"\n\
 fi\n\
+\n\
+# Run package discovery\n\
+php artisan package:discover --ansi || echo "Skipping package discovery"\n\
 \n\
 # Set correct permissions\n\
 chown -R www-data:www-data /var/www/html/storage\n\

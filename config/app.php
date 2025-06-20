@@ -24,10 +24,17 @@ return [
         'name' => env('COMPANY_NAME', 'Sereno System'),
         'representative' => env('COMPANY_REPRESENTATIVE', '垣原 親伍'),
         'founding_year' => env('COMPANY_FOUNDING_YEAR', 2022),
-        'address' => env('COMPANY_ADDRESS', '大阪府和泉市仏並町170-1'),
+        'address' => '〒594-1136　大阪府和泉市仏並町170-1',
+        'address_for_map' => '〒594-1121 大阪府和泉市下宮町１７０−１',
         'phone' => env('COMPANY_PHONE', '09032885689'),
         'email' => env('COMPANY_EMAIL', 'sk.shingo.10@gmail.com'),
         'youtube_channel' => env('YOUTUBE_CHANNEL', 'https://www.youtube.com/@kaaki_bike'),
+        'youtube_preview_video' => env('YOUTUBE_PREVIEW_VIDEO', 'https://youtu.be/tL0SQDVZWAE'),
+        'business_activities' => [
+            '3Dプリンティング事業',
+            'レーススチル撮影',
+            'アプリ、Web、基幹システム開発'
+        ],
     ],
     
     'providers' => [
