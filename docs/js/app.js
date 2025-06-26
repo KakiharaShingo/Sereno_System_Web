@@ -165,15 +165,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Send main email to company
                 Promise.all([
-                    emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, templateParams),
+                    emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, {
+                        from_name: templateParams.from_name,
+                        from_email: templateParams.from_email,
+                        subject: templateParams.subject,
+                        message: templateParams.message,
+                        sent_at: templateParams.sent_at
+                    }),
                     // Send auto-reply to customer
                     emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.autoReplyTemplateId, {
                         from_name: templateParams.from_name,
                         from_email: templateParams.from_email,
                         subject: templateParams.subject,
                         message: templateParams.message,
-                        sent_at: templateParams.sent_at,
-                        to_email: templateParams.from_email // Send auto-reply to customer's email
+                        sent_at: templateParams.sent_at
                     })
                 ])
                 .then(function(responses) {
