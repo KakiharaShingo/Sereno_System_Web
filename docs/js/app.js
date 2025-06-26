@@ -112,6 +112,82 @@ document.addEventListener('DOMContentLoaded', function() {
         cardObserver.observe(card);
     });
     
+    // EmailJS Configuration
+    // Replace these with your EmailJS credentials
+    const EMAIL_CONFIG = {
+        publicKey: 'YOUR_PUBLIC_KEY', // Replace with your EmailJS public key
+        serviceId: 'YOUR_SERVICE_ID', // Replace with your service ID
+        templateId: 'YOUR_TEMPLATE_ID' // Replace with your template ID
+    };
+    
+    // Initialize EmailJS
+    if (typeof emailjs !== 'undefined') {
+        emailjs.init(EMAIL_CONFIG.publicKey);
+    }
+    
+    // Contact form submission
+    const contactForm = document.getElementById('contact-form');
+    const formMessage = document.getElementById('form-message');
+    
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            const submitBtn = contactForm.querySelector('.submit-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 送信中...';
+            submitBtn.disabled = true;
+            
+            // Get form data
+            const formData = new FormData(contactForm);
+            const templateParams = {
+                from_name: formData.get('name'),
+                from_email: formData.get('email'),
+                subject: formData.get('subject'),
+                message: formData.get('message'),
+                to_email: 'sk.shingo.10@gmail.com' // Your email address
+            };
+            
+            // Send email via EmailJS
+            if (typeof emailjs !== 'undefined') {
+                emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, templateParams)
+                    .then(function(response) {
+                        console.log('Email sent successfully:', response);
+                        showMessage('お問い合わせを送信いたしました。ありがとうございます。', 'success');
+                        contactForm.reset();
+                    })
+                    .catch(function(error) {
+                        console.error('Email send failed:', error);
+                        showMessage('送信に失敗しました。お手数ですが、直接メールでお問い合わせください。', 'error');
+                    })
+                    .finally(function() {
+                        // Reset button
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    });
+            } else {
+                showMessage('メール機能が利用できません。直接メールでお問い合わせください。', 'error');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    }
+    
+    // Show form message
+    function showMessage(message, type) {
+        if (formMessage) {
+            formMessage.textContent = message;
+            formMessage.className = `form-message ${type}`;
+            formMessage.style.display = 'block';
+            
+            // Hide message after 5 seconds
+            setTimeout(function() {
+                formMessage.style.display = 'none';
+            }, 5000);
+        }
+    }
+    
     // Console branding
     console.log('%c3DMOTOCRAFT - Sereno System', 'color: #8FBC8F; font-size: 16px; font-weight: bold;');
     console.log('%c🚀 Website powered by modern web technologies', 'color: #666; font-size: 12px;');
