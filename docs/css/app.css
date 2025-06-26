@@ -871,55 +871,36 @@ body {
     justify-content: center;
 }
 
-.product-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    width: 100%;
-    max-width: 300px;
-}
-
-.product-card {
-    background: var(--white);
-    padding: 2rem;
-    border-radius: var(--border-radius);
+.shop-cta {
     text-align: center;
-    box-shadow: 0 2px 8px var(--shadow);
-    transition: var(--transition);
+    max-width: 400px;
 }
 
-.product-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px var(--shadow-hover);
+.shop-highlight {
+    background: var(--white);
+    padding: 3rem 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px var(--shadow);
+    border: 3px solid var(--light-green);
 }
 
-.product-image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 60px;
-    height: 60px;
-    background: var(--light-green);
-    border-radius: 50%;
-    margin: 0 auto 1rem;
+.shop-highlight i {
+    font-size: 3rem;
+    color: var(--primary-green);
+    margin-bottom: 1.5rem;
 }
 
-.product-image i {
-    font-size: 1.5rem;
+.shop-highlight h4 {
+    font-size: 1.4rem;
+    font-weight: var(--font-weight-bold);
     color: var(--dark-green);
+    margin-bottom: 1rem;
 }
 
-.product-card h4 {
-    font-size: 1.1rem;
-    font-weight: var(--font-weight-medium);
-    color: var(--dark-green);
-    margin-bottom: 0.5rem;
-}
-
-.product-card p {
-    font-size: 0.9rem;
+.shop-highlight p {
     color: var(--gray);
-    line-height: 1.4;
+    line-height: 1.6;
+    font-size: 1rem;
 }
 
 /* Shop Section Responsive */
@@ -937,45 +918,37 @@ body {
         align-items: center;
     }
     
-    .product-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        max-width: none;
+    .shop-highlight {
+        padding: 2rem 1.5rem;
     }
     
-    .product-card {
-        padding: 1.5rem;
+    .shop-highlight i {
+        font-size: 2.5rem;
     }
     
-    .product-image {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .product-image i {
+    .shop-highlight h4 {
         font-size: 1.2rem;
-    }
-    
-    .product-card h4 {
-        font-size: 1rem;
-    }
-    
-    .product-card p {
-        font-size: 0.8rem;
     }
 }
 
 @media (max-width: 480px) {
-    .product-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
     .shop-features {
         align-items: flex-start;
     }
     
     .shop-info {
         text-align: left;
+    }
+    
+    .shop-highlight {
+        padding: 1.5rem 1rem;
+    }
+    
+    .shop-highlight i {
+        font-size: 2rem;
+    }
+    
+    .shop-highlight h4 {
+        font-size: 1.1rem;
     }
 }
