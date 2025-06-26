@@ -163,27 +163,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('EmailJS Configuration:', EMAIL_CONFIG);
                 console.log('Template Parameters:', templateParams);
                 
-                // Send main email to company
-                Promise.all([
-                    emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, {
-                        from_name: templateParams.from_name,
-                        from_email: templateParams.from_email,
-                        subject: templateParams.subject,
-                        message: templateParams.message,
-                        sent_at: templateParams.sent_at
-                    }),
-                    // Send auto-reply to customer
-                    emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.autoReplyTemplateId, {
-                        from_name: templateParams.from_name,
-                        from_email: templateParams.from_email,
-                        subject: templateParams.subject,
-                        message: templateParams.message,
-                        sent_at: templateParams.sent_at
-                    })
-                ])
-                .then(function(responses) {
-                    console.log('Emails sent successfully:', responses);
-                    showMessage('お問い合わせを送信いたしました。自動返信メールもお送りしています。ありがとうございます。', 'success');
+                // Send main email to company first (test one at a time)
+                emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, {
+                    from_name: templateParams.from_name,
+                    from_email: templateParams.from_email,
+                    subject: templateParams.subject,
+                    message: templateParams.message,
+                    sent_at: templateParams.sent_at
+                })
+                .then(function(response) {
+                    console.log('Email sent successfully:', response);
+                    showMessage('お問い合わせを送信いたしました。ありがとうございます。', 'success');
                     contactForm.reset();
                 })
                 .catch(function(error) {
