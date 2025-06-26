@@ -163,41 +163,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('EmailJS Configuration:', EMAIL_CONFIG);
                 console.log('Template Parameters:', templateParams);
                 
-                // Send both emails
-                Promise.all([
-                    // Send main email to company
-                    emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, {
+                // Test main email first
+                emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, {
+                    from_name: templateParams.from_name,
+                    from_email: templateParams.from_email,
+                    subject: templateParams.subject,
+                    message: templateParams.message,
+                    sent_at: templateParams.sent_at
+                })
+                .then(function(response) {
+                    console.log('Main email sent successfully:', response);
+                    
+                    // If main email succeeds, try auto-reply
+                    return emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.autoReplyTemplateId, {
                         from_name: templateParams.from_name,
                         from_email: templateParams.from_email,
                         subject: templateParams.subject,
                         message: templateParams.message,
                         sent_at: templateParams.sent_at
-                    }),
-                    // Send auto-reply to customer
-                    emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.autoReplyTemplateId, {
-                        from_name: templateParams.from_name,
-                        from_email: templateParams.from_email,
-                        subject: templateParams.subject,
-                        message: templateParams.message,
-                        sent_at: templateParams.sent_at
-                    })
-                ])
-                .then(function(responses) {
-                    console.log('Emails sent successfully:', responses);
+                    });
+                })
+                .then(function(response) {
+                    console.log('Auto-reply sent successfully:', response);
                     showMessage('お問い合わせを送信いたしました。確認メールもお送りしています。ありがとうございます。', 'success');
                     contactForm.reset();
                 })
                 .catch(function(error) {
-                    console.error('Email send failed:', error);
-                    console.error('Error details:', JSON.stringify(error, null, 2));
-                    
-                    let errorMessage = '送信に失敗しました。';
-                    if (error && error.text) {
-                        errorMessage += ' エラー: ' + error.text;
+                    console.error('Email send error at step:', error);
+                    if (error.status === 422 && error.text.includes('recipients address')) {
+                        showMessage('メール設定に問題があります。EmailJSテンプレートの受信者設定を確認してください。', 'error');
+                    } else {
+                        showMessage('メール送信に失敗しました。直接メールでお問い合わせください。', 'error');
                     }
-                    errorMessage += ' お手数ですが、直接メールでお問い合わせください。';
-                    
-                    showMessage(errorMessage, 'error');
                 })
                 .finally(function() {
                     // Reset button
