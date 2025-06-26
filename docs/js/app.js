@@ -141,12 +141,21 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Get form data
             const formData = new FormData(contactForm);
+            const now = new Date();
             const templateParams = {
                 from_name: formData.get('name'),
                 from_email: formData.get('email'),
                 subject: formData.get('subject'),
                 message: formData.get('message'),
-                to_email: 'sk.shingo.10@gmail.com' // Your email address
+                to_email: 'sk.shingo.10@gmail.com',
+                sent_at: now.toLocaleString('ja-JP', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZone: 'Asia/Tokyo'
+                })
             };
             
             // Send email via EmailJS
