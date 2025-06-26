@@ -113,12 +113,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // EmailJS Configuration
-    // Replace these with your EmailJS credentials
     const EMAIL_CONFIG = {
-        publicKey: 'YOUR_PUBLIC_KEY', // Replace with your EmailJS public key
-        serviceId: 'YOUR_SERVICE_ID', // Replace with your service ID
-        templateId: 'YOUR_TEMPLATE_ID', // Replace with your main template ID
-        autoReplyTemplateId: 'YOUR_AUTOREPLY_TEMPLATE_ID' // Replace with your auto-reply template ID
+        publicKey: '4wzDtq7AZn8ndGCr6',
+        serviceId: 'service_zpqzyws',
+        templateId: 'template_0d2udd9',
+        autoReplyTemplateId: 'template_cv79t3n'
     };
     
     // Initialize EmailJS
