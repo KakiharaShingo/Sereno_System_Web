@@ -117,7 +117,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const EMAIL_CONFIG = {
         publicKey: 'YOUR_PUBLIC_KEY', // Replace with your EmailJS public key
         serviceId: 'YOUR_SERVICE_ID', // Replace with your service ID
-        templateId: 'YOUR_TEMPLATE_ID' // Replace with your template ID
+        templateId: 'YOUR_TEMPLATE_ID', // Replace with your main template ID
+        autoReplyTemplateId: 'YOUR_AUTOREPLY_TEMPLATE_ID' // Replace with your auto-reply template ID
     };
     
     // Initialize EmailJS
@@ -160,21 +161,33 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Send email via EmailJS
             if (typeof emailjs !== 'undefined') {
-                emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, templateParams)
-                    .then(function(response) {
-                        console.log('Email sent successfully:', response);
-                        showMessage('お問い合わせを送信いたしました。ありがとうございます。', 'success');
-                        contactForm.reset();
+                // Send main email to company
+                Promise.all([
+                    emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, templateParams),
+                    // Send auto-reply to customer
+                    emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.autoReplyTemplateId, {
+                        from_name: templateParams.from_name,
+                        from_email: templateParams.from_email,
+                        subject: templateParams.subject,
+                        message: templateParams.message,
+                        sent_at: templateParams.sent_at,
+                        to_email: templateParams.from_email // Send auto-reply to customer's email
                     })
-                    .catch(function(error) {
-                        console.error('Email send failed:', error);
-                        showMessage('送信に失敗しました。お手数ですが、直接メールでお問い合わせください。', 'error');
-                    })
-                    .finally(function() {
-                        // Reset button
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                    });
+                ])
+                .then(function(responses) {
+                    console.log('Emails sent successfully:', responses);
+                    showMessage('お問い合わせを送信いたしました。自動返信メールもお送りしています。ありがとうございます。', 'success');
+                    contactForm.reset();
+                })
+                .catch(function(error) {
+                    console.error('Email send failed:', error);
+                    showMessage('送信に失敗しました。お手数ですが、直接メールでお問い合わせください。', 'error');
+                })
+                .finally(function() {
+                    // Reset button
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                });
             } else {
                 showMessage('メール機能が利用できません。直接メールでお問い合わせください。', 'error');
                 submitBtn.innerHTML = originalText;
