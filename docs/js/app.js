@@ -160,6 +160,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Send email via EmailJS
             if (typeof emailjs !== 'undefined') {
+                console.log('EmailJS Configuration:', EMAIL_CONFIG);
+                console.log('Template Parameters:', templateParams);
+                
                 // Send main email to company
                 Promise.all([
                     emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, templateParams),
@@ -180,7 +183,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .catch(function(error) {
                     console.error('Email send failed:', error);
-                    showMessage('送信に失敗しました。お手数ですが、直接メールでお問い合わせください。', 'error');
+                    console.error('Error details:', JSON.stringify(error, null, 2));
+                    
+                    let errorMessage = '送信に失敗しました。';
+                    if (error && error.text) {
+                        errorMessage += ' エラー: ' + error.text;
+                    }
+                    errorMessage += ' お手数ですが、直接メールでお問い合わせください。';
+                    
+                    showMessage(errorMessage, 'error');
                 })
                 .finally(function() {
                     // Reset button
