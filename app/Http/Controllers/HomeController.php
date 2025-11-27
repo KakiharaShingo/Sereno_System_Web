@@ -21,10 +21,11 @@ class HomeController extends Controller
             'ko' => '한국어'
         ]);
         $companyInfo = config('app.company');
-        
-        return view('home', compact('currentLocale', 'availableLocales', 'companyInfo'));
+        $translations = __('messages');
+
+        return view('home', compact('currentLocale', 'availableLocales', 'companyInfo', 'translations'));
     }
-    
+
     /**
      * Handle contact form submission
      */
@@ -36,17 +37,17 @@ class HomeController extends Controller
             'subject' => 'required|string|max:255',
             'message' => 'required|string|max:2000',
         ]);
-        
+
         $data = $request->only(['name', 'email', 'subject', 'message']);
-        
+
         // Send email notification
         try {
             Mail::html(view('emails.contact', $data)->render(), function ($message) use ($data) {
                 $message->to(Config::get('app.company.email'))
-                        ->subject('[3DMOTOCRAFT] ' . $data['subject'])
-                        ->replyTo($data['email'], $data['name']);
+                    ->subject('[3DMOTOCRAFT] ' . $data['subject'])
+                    ->replyTo($data['email'], $data['name']);
             });
-            
+
             return response()->json([
                 'success' => true,
                 'message' => __('messages.contact_success')
@@ -58,7 +59,7 @@ class HomeController extends Controller
             ], 500);
         }
     }
-    
+
     /**
      * Get company information for API
      */
@@ -66,7 +67,7 @@ class HomeController extends Controller
     {
         return response()->json(Config::get('app.company'));
     }
-    
+
     /**
      * Get company location information for maps
      */
@@ -81,7 +82,7 @@ class HomeController extends Controller
             'email' => $company['email']
         ]);
     }
-    
+
     /**
      * Get YouTube channel information
      */
@@ -95,7 +96,7 @@ class HomeController extends Controller
             'preview_video_id' => $this->extractVideoId($previewVideoUrl)
         ]);
     }
-    
+
     /**
      * Convert YouTube URL to embed URL
      */
@@ -110,7 +111,7 @@ class HomeController extends Controller
         }
         return $url;
     }
-    
+
     /**
      * Extract video ID from YouTube URL
      */
@@ -123,7 +124,7 @@ class HomeController extends Controller
         }
         return null;
     }
-    
+
     /**
      * Test contact form submission (for debugging)
      */
@@ -135,15 +136,15 @@ class HomeController extends Controller
             'subject' => $request->input('subject', 'メール送信テスト'),
             'message' => $request->input('message', 'これはメール送信機能のテストです。'),
         ];
-        
+
         // Send email notification
         try {
             Mail::html(view('emails.contact', $data)->render(), function ($message) use ($data) {
                 $message->to(Config::get('app.company.email'))
-                        ->subject('[3DMOTOCRAFT] ' . $data['subject'])
-                        ->replyTo($data['email'], $data['name']);
+                    ->subject('[3DMOTOCRAFT] ' . $data['subject'])
+                    ->replyTo($data['email'], $data['name']);
             });
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'メールが正常に送信されました。',

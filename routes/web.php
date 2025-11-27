@@ -25,28 +25,23 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/contact', [HomeController::class, 'contact'])->name('contact.submit');
 
 // Privacy Policy and Terms of Service
-Route::get('/privacy', function () {
-    return view('privacy');
-})->name('privacy');
-
-Route::get('/terms', function () {
-    return view('terms');
-})->name('terms');
+Route::get('/privacy', [HomeController::class, 'index'])->name('privacy');
+Route::get('/terms', [HomeController::class, 'index'])->name('terms');
 
 // Hidden EC routes (for future use - not visible in navigation)
 Route::prefix('shop')->group(function () {
     Route::get('/', function () {
         return view('shop.index');
     })->name('shop.index');
-    
+
     Route::get('/products', function () {
         return view('shop.products');
     })->name('shop.products');
-    
+
     Route::get('/cart', function () {
         return view('shop.cart');
     })->name('shop.cart');
-    
+
     Route::get('/checkout', function () {
         return view('shop.checkout');
     })->name('shop.checkout');

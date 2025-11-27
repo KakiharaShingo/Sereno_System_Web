@@ -11,10 +11,11 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('public/js/app.js', 'public/js')
-   .sass('public/css/app.css', 'public/css', [
-       //
-   ]);
+mix.js('resources/js/app.jsx', 'public/js')
+    .react()
+    .postCss('resources/css/app.css', 'public/css', [
+        require('tailwindcss'),
+    ]);
 
 if (mix.inProduction()) {
     mix.version();
