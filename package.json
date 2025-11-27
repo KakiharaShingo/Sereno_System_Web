@@ -11,7 +11,7 @@
     "hot": "mix watch --hot",
     "prod": "npm run production",
     "production": "mix --production",
-    "build": "echo 'Static site - no build needed'",
+    "build": "npm run production",
     "serve": "php artisan serve",
     "test": "php artisan test",
     "lint": "eslint public/js/*.js",

@@ -1,3 +1,9 @@
 {
-  "outputDirectory": "docs"
+  "outputDirectory": "public",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }

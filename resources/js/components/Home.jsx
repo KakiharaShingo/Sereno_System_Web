@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import emailjs from '@emailjs/browser';
 import { Menu, X, Box, Settings, MapPin, Play, Mail, ChevronDown, ExternalLink, ArrowRight, Printer, Cpu, Wrench, ShoppingBag, Layers, Zap, Monitor, Instagram, Truck, ShieldCheck } from 'lucide-react';
+
 import { Link } from 'react-router-dom';
+import { translations } from '../translations';
 
 // --- Scroll Reveal Animation Component ---
 const RevealOnScroll = ({ children, delay = 0 }) => {
@@ -39,28 +41,25 @@ const RevealOnScroll = ({ children, delay = 0 }) => {
 };
 
 // --- Translation Helper ---
-const t = (key) => {
-    return window.sereno?.translations?.[key] || key;
-};
+// Moved inside component to access state
 
 // --- Language Switcher Component ---
-const LanguageSwitcher = ({ mobile = false }) => {
-    const currentLocale = window.sereno?.locale || 'ja';
-    const locales = window.sereno?.locales || { ja: '日本語' };
+const LanguageSwitcher = ({ mobile = false, currentLocale, onLanguageChange }) => {
+    const locales = { ja: '日本語', en: 'English' };
 
     return (
         <div className={`flex items-center gap-2 ${mobile ? 'mt-4 px-6' : ''}`}>
             {Object.entries(locales).map(([code, label]) => (
-                <a
+                <button
                     key={code}
-                    href={`/lang/${code}`}
+                    onClick={() => onLanguageChange(code)}
                     className={`text-xs font-bold px-2 py-1 rounded transition-colors ${currentLocale === code
                         ? 'bg-emerald-600 text-white'
                         : 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
                         }`}
                 >
                     {label}
-                </a>
+                </button>
             ))}
         </div>
     );
@@ -69,6 +68,11 @@ const LanguageSwitcher = ({ mobile = false }) => {
 export default function Home() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [locale, setLocale] = useState('ja');
+
+    const t = (key) => {
+        return translations[locale]?.[key] || key;
+    };
 
     // Contact Form State
     const [formData, setFormData] = useState({
@@ -247,7 +251,7 @@ export default function Home() {
                         <NavLink to="youtube">{t('nav_youtube')}</NavLink>
                         <NavLink to="location">{t('nav_location')}</NavLink>
                         <NavLink to="company">{t('nav_company')}</NavLink>
-                        <LanguageSwitcher />
+                        <LanguageSwitcher currentLocale={locale} onLanguageChange={setLocale} />
                         <button
                             onClick={() => scrollToSection('contact')}
                             // Changed button style to fit light green theme
@@ -276,7 +280,7 @@ export default function Home() {
                         <NavLink to="youtube" mobile>{t('nav_youtube')}</NavLink>
                         <NavLink to="location" mobile>{t('nav_location')}</NavLink>
                         <NavLink to="company" mobile>{t('nav_company')}</NavLink>
-                        <LanguageSwitcher mobile />
+                        <LanguageSwitcher mobile currentLocale={locale} onLanguageChange={setLocale} />
                         <button
                             onClick={() => scrollToSection('contact')}
                             className="mt-6 w-full py-4 bg-emerald-600 text-white rounded-xl font-bold shadow-lg shadow-emerald-200"
